@@ -12,32 +12,29 @@ Esta API foi desenvolvida em Go (Golang) seguindo as melhores práticas de Clean
 
 ```plaintext
 go-api/
-├── cmd/                   # Ponto de entrada principal
-│   ├── main.go            # Inicia o servidor
 │
-├── config/                # Configurações gerais (banco, env, etc.)
-│   ├── database.go        # Configuração do banco de dados
+├── auth/                # authenticações com JWT
+│   ├── auth.go        
 │
-├── internal/              # Código interno seguindo DDD
-│   ├── domain/            # 📌 Camada de Domínio (Entidades e Regras de Negócio)
-│   │   ├── usuario.go     # Struct de usuário
-│   │
-│   ├── repository/        # 📌 Camada de Repositórios (Acesso ao banco)
-│   │   ├── usuario_repo.go
-│   │
-│   ├── usecase/           # 📌 Camada de Casos de Uso (Regras de Negócio)
-│   │   ├── usuario_usecase.go
-│   │
-│   ├── handler/           # 📌 Camada de Handlers (Interface com a Web)
-│   │   ├── usuario_handler.go
+├── controlle/              # Camada que expoe endpoints
+│   ├── auth_controller.go
+│   │── teste_controller.go
+│   │── usuario_controller.go
+│   
+│── middleware/        # 📌 Bibliteca de validação dos endpoints
+│   |── middleware.go
 │
-├── pkg/                   # 📌 Pacotes compartilháveis
-│   ├── jwt/               # Biblioteca de autenticação JWT
-│   │   ├── jwt.go
-│
-├── test/                  # 📌 Testes Unitários e de Integração
-│   ├── usuario_test.go
-│
+│── models/           # 📌 Camada dos models
+│   ├── usuario.go
+│   
+|── resources/          # 📌 Camada de configuração com banco de dados
+|   ├── postgre_conectar.go
+|── routes/            # camada das rotas
+|   ├── authentication_routes.go
+|   ├── teste_routes.go
+|   ├── usuario_routes.go
+|   
+│── main.go            # Inicia o servidor
 ├── go.mod                 # Gerenciamento de dependências
 ```
 
