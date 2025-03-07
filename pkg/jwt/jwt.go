@@ -1,27 +1,35 @@
-package auth
+package jwt
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 )
 
-// Chave secreta usada para assinar os tokens
-var secretKey = []byte("alice")
+// Carregar variáveis do .env
+func loadEnv() {
+	_ = godotenv.Load()
+}
 
-// GerarToken cria um JWT válido por 1 hora
 func GerarToken(usuarioID uint) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{ // 🟢 Alterado para HS256
+	loadEnv()
+	secretKey := []byte(os.Getenv("JWT_SECRET"))
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"usuario_id": usuarioID,
-		"exp":        time.Now().Add(time.Hour).Unix(), // Token expira em 1 hora
+		"exp":        time.Now().Add(time.Hour).Unix(),
 	})
 
 	return token.SignedString(secretKey)
 }
 
-// ValidarToken verifica se o token JWT é válido
 func ValidarToken(tokenString string) (uint, error) {
+	loadEnv()
+	secretKey := []byte(os.Getenv("JWT_SECRET"))
+
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})

@@ -3,7 +3,8 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/alepmedeiros/go-api/auth"
+	"github.com/alepmedeiros/go-api/pkg/jwt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +18,7 @@ func AutenticarMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		usuarioID, err := auth.ValidarToken(tokenString)
+		usuarioID, err := jwt.ValidarToken(tokenString)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			c.Abort()
