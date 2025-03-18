@@ -9,9 +9,9 @@ import (
 
 func ConfigurarRotasUsuarios(r *gin.Engine, usuarioHandler *handler.UsuarioHandler) {
 	usuarios := r.Group("/usuarios")
+	usuarios.POST("", usuarioHandler.CriarUsuario)
 	usuarios.Use(middleware.AutenticarMiddleware())
 	{
-		usuarios.POST("", usuarioHandler.CriarUsuario)
 		usuarios.GET("", usuarioHandler.ListarUsuarios)
 		usuarios.GET("/:id", usuarioHandler.BuscarUsuario)
 		usuarios.PUT("/:id", usuarioHandler.AtualizarUsuario)

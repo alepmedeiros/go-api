@@ -24,5 +24,5 @@ func main() {
 	routes.ConfigurarRotasUsuarios(r, usuarioHandler)
 	routes.ConfigurarRotasAuth(r, authHandler)
 
-	r.Run(":8080")
+	r.Run(":8081")
 }
