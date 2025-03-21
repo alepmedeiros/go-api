@@ -3,12 +3,14 @@ package usecase
 import (
 	"errors"
 
+	"github.com/alepmedeiros/go-api/internal/domain"
 	"github.com/alepmedeiros/go-api/internal/repository"
 	"github.com/alepmedeiros/go-api/pkg/jwt"
 )
 
 type AuthUseCase interface {
 	Login(email, senha string) (string, error)
+	Perfil(userID uint) (*domain.Usuario, error)
 }
 
 type authUseCase struct {
@@ -35,4 +37,8 @@ func (a *authUseCase) Login(email, senha string) (string, error) {
 	}
 
 	return token, nil
+}
+
+func (a *authUseCase) Perfil(userID uint) (*domain.Usuario, error) {
+	return a.usuarioRepo.BuscarPorID(userID)
 }

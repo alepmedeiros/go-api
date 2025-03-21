@@ -6,16 +6,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 )
 
-// Carregar variáveis do .env
-func loadEnv() {
-	_ = godotenv.Load()
-}
-
 func GerarToken(usuarioID uint) (string, error) {
-	loadEnv()
 	secretKey := []byte(os.Getenv("JWT_SECRET"))
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -27,7 +20,6 @@ func GerarToken(usuarioID uint) (string, error) {
 }
 
 func ValidarToken(tokenString string) (uint, error) {
-	loadEnv()
 	secretKey := []byte(os.Getenv("JWT_SECRET"))
 
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {

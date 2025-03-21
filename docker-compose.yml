@@ -1,0 +1,49 @@
+services:
+  go-api:
+    build: .
+    container_name: go-api
+    depends_on:
+      - postgres
+    ports:
+      - "9090:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=go_api_db
+      - JWT_SECRET=alice
+    networks:
+      - go-network
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: go_api_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - go-network
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    restart: always
+    environment:
+      SWAGGER_JSON: /api-docs/swagger.json
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./cmd/docs:/api-docs
+    networks:
+      - go-network
+
+networks:
+  go-network:
+
+volumes:
+  postgres_data:

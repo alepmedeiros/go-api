@@ -1,0 +1,420 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "WhatsApp Plannerx Multi-Instance API",
+      "description": "API para gerenciar múltiplas conexões do WhatsApp usando WhatsMeow.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://whatsapp.i9up.com.br",
+        "description": "Servidor de Produção"
+      },
+      {
+        "url": "http://localhost:9090",
+        "description": "Ambiente de Desenvolvimento"
+      }
+    ],
+    "paths": {
+      "/auth/login": {
+        "post": {
+          "tags": [
+           "Auth"
+          ],
+          "summary": "Autenticação de Usuário",
+          "description": "Realiza login e retorna um token JWT.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "senha": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Login bem-sucedido",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Credenciais inválidas"
+            }
+          }
+        }
+      },
+      "/auth/perfil": {
+        "get": {
+          "tags": [
+           "Auth"
+          ],
+          "summary": "Perfil do Usuário",
+          "description": "Retorna os dados do usuário autenticado.",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Dados do usuário retornados com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "nome": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token inválido ou expirado"
+            }
+          }
+        }
+      },
+      "/usuarios": {
+        "post": {
+          "tags": [
+           "Usuarios"
+          ],
+          "summary": "Cadastrar Usuário",
+          "description": "Registra um novo usuário na API.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "senha": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Usuário cadastrado com sucesso"
+            },
+            "400": {
+              "description": "Erro na requisição"
+            }
+          }
+        },
+        "get": {
+          "tags": [
+           "Usuarios"
+          ],
+          "summary": "Listar Usuários",
+          "description": "Retorna uma lista de todos os usuários cadastrados.",
+          "responses": {
+            "200": {
+              "description": "Lista de usuários retornada com sucesso"
+            }
+          }
+        }
+      },
+      "/usuarios/{id}": {
+        "get": {
+          "tags": [
+           "Usuarios"
+          ],
+          "summary": "Buscar Usuário por ID",
+          "description": "Retorna os dados de um usuário específico.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Usuário encontrado"
+            },
+            "404": {
+              "description": "Usuário não encontrado"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+           "Usuarios"
+          ],
+          "summary": "Atualizar Usuário",
+          "description": "Atualiza os dados de um usuário específico.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Usuário atualizado com sucesso"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+           "Usuarios"
+          ],
+          "summary": "Deletar Usuário",
+          "description": "Remove um usuário da API.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Usuário deletado com sucesso"
+            }
+          }
+        }
+      },
+      "/webhook/cadastrar": {
+        "post": {
+          "tags": [
+           "Webhook"
+          ],
+          "summary": "Cadastrar Webhook",
+          "description": "Registra um webhook para receber eventos do WhatsApp.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "integer"
+                    },
+                    "device_id": {
+                      "type": "string"
+                    },
+                    "webhook_url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Webhook cadastrado com sucesso"
+            },
+            "400": {
+              "description": "Erro na requisição"
+            }
+          }
+        }
+      },
+      "/webhook/{device_id}": {
+        "get": {
+          "tags": [
+           "Webhook"
+          ],
+          "summary": "Buscar Webhook",
+          "description": "Retorna o webhook associado a um dispositivo específico.",
+          "parameters": [
+            {
+              "name": "device_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Webhook encontrado"
+            },
+            "404": {
+              "description": "Webhook não encontrado"
+            }
+          }
+        }
+      },
+      "/whatsapp/sessao": {
+        "post": {
+          "tags": [
+           "Whatsapp"
+          ],
+          "summary": "Criar Sessão do WhatsApp",
+          "description": "Inicializa uma nova sessão do WhatsApp.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "integer"
+                    },
+                    "device_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Sessão criada com sucesso"
+            },
+            "400": {
+              "description": "Erro na requisição"
+            }
+          }
+        }
+      },
+      "/whatsapp/sessao/{id}": {
+        "get": {
+          "tags": [
+           "Whatsapp"
+          ],
+          "summary": "Buscar Sessão do WhatsApp",
+          "description": "Retorna os dados de uma sessão do WhatsApp pelo ID.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Sessão encontrada"
+            },
+            "404": {
+              "description": "Sessão não encontrada"
+            }
+          }
+        }
+      },
+      "/whatsapp/mensagem": {
+        "post": {
+          "tags": [
+           "Whatsapp"
+          ],
+          "summary": "Enviar Mensagem",
+          "description": "Envia uma mensagem para um número de WhatsApp.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "device_id": {
+                      "type": "string"
+                    },
+                    "numero": {
+                      "type": "string"
+                    },
+                    "mensagem": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Mensagem enviada com sucesso"
+            },
+            "400": {
+              "description": "Erro na requisição"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }

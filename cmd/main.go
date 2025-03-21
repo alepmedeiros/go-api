@@ -7,6 +7,7 @@ import (
 	"github.com/alepmedeiros/go-api/internal/usecase"
 	"github.com/alepmedeiros/go-api/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,9 +21,22 @@ func main() {
 	authUseCase := usecase.NewAuthUseCase(usuarioRepo)
 	authHandler := handler.NewAuthHandler(authUseCase)
 
+	webhookRepo := repository.NewWebhookRepository(db)
+	webhookUseCase := usecase.NewWebhookUseCase(webhookRepo)
+	webhookHandler := handler.NewWebhookHandler(webhookUseCase)
+
 	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // Permite todas as origens (você pode restringir)
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
 	routes.ConfigurarRotasUsuarios(r, usuarioHandler)
 	routes.ConfigurarRotasAuth(r, authHandler)
+	routes.ConfigurarRotasWebhook(r, webhookHandler)
 
-	r.Run(":8081")
+	r.Run(":8080")
 }
